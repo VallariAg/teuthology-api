@@ -26,5 +26,5 @@ COPY teuthology_api.sh /
 RUN pip3 install -r requirements.txt
 
 WORKDIR /teuthology_api/src
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8082"]
-# ENTRYPOINT /teuthology_api.sh
+
+ENTRYPOINT gunicorn -c /teuthology_api/gunicorn_config.py main:app
