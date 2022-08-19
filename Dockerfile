@@ -22,7 +22,6 @@ COPY .teuthology.yaml /root
 
 WORKDIR /teuthology_api
 COPY . /teuthology_api/
-COPY teuthology_api.sh /
 RUN pip3 install -r requirements.txt
 
 WORKDIR /teuthology_api/src
