@@ -1,9 +1,7 @@
 import logging
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
-from suite import run
-from schemas.suite import SuiteArgs
-
+from routes import suite
 
 log = logging.getLogger(__name__)
 app = FastAPI()
@@ -13,11 +11,4 @@ app = FastAPI()
 def read_root():
     return {"root": "success"}
 
-@app.post("/suite", status_code=200)
-def create_run(args: SuiteArgs):
-    try:
-        args = args.dict(by_alias=True)
-        run(args)
-        return {}
-    except Exception as exc:
-        raise HTTPException(status_code=404, detail=repr(exc))
+app.include_router(suite.router)
