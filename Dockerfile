@@ -21,9 +21,9 @@ RUN apt-get update && \
 COPY .teuthology.yaml /root
 
 WORKDIR /teuthology_api
-COPY . /teuthology_api/
+COPY requirements.txt /teuthology_api/
 RUN pip3 install -r requirements.txt
+COPY . /teuthology_api/
 
 WORKDIR /teuthology_api/src
-
 ENTRYPOINT gunicorn -c /teuthology_api/gunicorn_config.py main:app
