@@ -52,7 +52,8 @@ curl --location --request POST 'http://localhost:8082/suite/' \
          "--suite-branch": "wip-dis-testing-2",
          "--suite-repo": "https://github.com/ceph/ceph-ci.git",
          "--teuthology-branch": "main",
-         "--verbose": "1"
+         "--verbose": "1",
+         "--user": "vallariag"
  }'
 ```
 
