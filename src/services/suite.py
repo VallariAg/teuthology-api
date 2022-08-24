@@ -27,6 +27,16 @@ def run(args):
         log.error("teuthology.suite.main failed with the error: " + repr(exc))
         raise
 
+def dry_run(args):
+    try:
+        args['--dry-run'] = True
+        results = teuthology.suite.main(args)
+        log.debug(results)
+        return
+    except Exception as exc:
+        log.error("teuthology.suite.main failed with the error: " + repr(exc))
+        raise
+
 def get_run_details(run_name):
     """
     Queries paddles to look if run is created.

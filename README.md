@@ -59,5 +59,4 @@ curl --location --request POST 'http://localhost:8082/suite/' \
  }'
 ```
 
-
-
+POST `/suite/dryrun`: dry runs a suite.
