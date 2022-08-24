@@ -20,7 +20,7 @@ class SuiteArgs(BaseArgs):
     rerun_statuses: Union[str, None] = Field(default='fail,dead', alias="--rerun-statuses")
     sha1: Union[str, None] = Field(default=None, alias="--sha1")
     sleep_before_teardown: Union[str, None] = Field(default='0', alias="--sleep-before-teardown")
-    suite: Union[str, None] = Field(default=None, alias="--suite")
+    suite: str = Field(alias="--suite")
     suite_branch: Union[str, None] = Field(default=None, alias="--suite-branch")
     suite_dir: Union[str, None] = Field(default=None, alias="--suite-dir")
     suite_relpath: Union[str, None] = Field(default='qa', alias="--suite-relpath")
