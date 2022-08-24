@@ -16,8 +16,10 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
             - 8082:8082
         depends_on:
             - teuthology
+            - paddles
         links:
             - teuthology
+            - paddles
     ```
 3. Follow teuthology development setup instructions from [here](https://github.com/ceph/teuthology/tree/main/docs/docker-compose).
 
