@@ -45,7 +45,7 @@ class SuiteArgs(BaseArgs):
     filter: Union[str, None] = Field(default=None, alias="--filter")
     filter_out: Union[str, None] = Field(default=None, alias="--filter-out")
     filter_all: Union[str, None] = Field(default=None, alias="--filter-all")
-    filte_fragments: Union[str, None] = Field(default=None, alias="--filter-fragments")
+    filter_fragments: Union[str, None] = Field(default='false', alias="--filter-fragments")
     subset: Union[str, None] = Field(default=None, alias="--subset")
     timeout: Union[str, None] = Field(default='43200', alias="--timeout")
     rocketchat: Union[str, None] = Field(default=None, alias="--rocketchat")
