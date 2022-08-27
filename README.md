@@ -37,9 +37,14 @@ Returns `{"root": "success"}`.
 ### Route `/suite`
 
 POST `/suite/`: schedules a run.
+
+Two query parameters: 
+- `dry_run` (boolean) - Do a dry run; do not schedule anything.
+- `logs` (boolean) - Send scheduling logs in response.
+
 Example:
 ```
-curl --location --request POST 'http://localhost:8082/suite/' \
+curl --location --request POST 'http://localhost:8082/suite?dry_run=false&logs=true' \
 --header 'Content-Type: application/json' \
 --data-raw '{
          "--ceph": "wip-dis-testing-2",
@@ -59,4 +64,3 @@ curl --location --request POST 'http://localhost:8082/suite/' \
  }'
 ```
 
-POST `/suite/dryrun`: dry runs a suite.
