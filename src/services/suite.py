@@ -1,5 +1,6 @@
 import teuthology.suite
-import logging, requests # Note: import requests after teuthology
+from multiprocessing import Process
+import logging, requests, uuid, os # Note: import requests after teuthology
 from datetime import datetime
 
 from config import settings
@@ -8,10 +9,26 @@ PADDLES_URL = settings.PADDLES_URL
 
 log = logging.getLogger(__name__)
 
-def run(args):
+
+def run(args, dry_run: bool, send_logs: bool):
+    """
+    Schedule a suite.
+    :returns: Run details (dict) and logs (list).
+    """
     try:
         args["--timestamp"] = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
-        teuthology.suite.main(args)
+        if dry_run:
+            args['--dry-run'] = True
+            logs = logs_run(args)
+            return { "run": {}, "logs": logs }
+
+        logs = []
+        if send_logs:
+            logs = logs_run(args)
+        else:
+            teuthology.suite.main(args)
+
+        # get run details from paddles
         run_name = make_run_name({
             "machine_type": args["--machine-type"], 
             "user": args["--user"], 
@@ -22,20 +39,36 @@ def run(args):
             "flavor": args["--flavor"]
         })
         run_details = get_run_details(run_name)
-        return { "run": run_details }
+        return { "run": run_details, "logs": logs }
     except Exception as exc:
         log.error("teuthology.suite.main failed with the error: " + repr(exc))
         raise
 
-def dry_run(args):
-    try:
-        args['--dry-run'] = True
-        results = teuthology.suite.main(args)
-        log.debug(results)
-        return
-    except Exception as exc:
-        log.error("teuthology.suite.main failed with the error: " + repr(exc))
-        raise
+def logs_run(args):
+    """
+    Schedule suite in a seperate process (to isolate logs).
+    """
+    id = str(uuid.uuid4())
+    log_file = f'/archive_dir/{id}.log'
+
+    teuthology_process = Process(target=run_with_logs, args=(args, log_file,))
+    teuthology_process.start()
+    teuthology_process.join()
+
+    logs = ""
+    with open(log_file) as f:
+        logs = f.readlines()
+    if os.path.isfile(log_file): 
+        os.remove(log_file)
+    return logs
+
+def run_with_logs(args, log_file):
+    """
+    Set a new log file to store logs 
+    and then schedule suite.
+    """
+    teuthology.setup_log_file(log_file)
+    teuthology.suite.main(args)
 
 def get_run_details(run_name):
     """
