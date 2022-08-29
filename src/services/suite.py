@@ -1,6 +1,6 @@
 import teuthology.suite
-from multiprocessing import Process
-import logging, requests, uuid, os # Note: import requests after teuthology
+from services.helpers import logs_run
+import logging, requests # Note: import requests after teuthology
 from datetime import datetime
 
 from config import settings
@@ -19,12 +19,12 @@ def run(args, dry_run: bool, send_logs: bool):
         args["--timestamp"] = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
         if dry_run:
             args['--dry-run'] = True
-            logs = logs_run(args)
+            logs = logs_run(teuthology.suite.main, args)
             return { "run": {}, "logs": logs }
 
         logs = []
         if send_logs:
-            logs = logs_run(args)
+            logs = logs_run(teuthology.suite.main, args)
         else:
             teuthology.suite.main(args)
 
@@ -43,32 +43,6 @@ def run(args, dry_run: bool, send_logs: bool):
     except Exception as exc:
         log.error("teuthology.suite.main failed with the error: " + repr(exc))
         raise
-
-def logs_run(args):
-    """
-    Schedule suite in a seperate process (to isolate logs).
-    """
-    id = str(uuid.uuid4())
-    log_file = f'/archive_dir/{id}.log'
-
-    teuthology_process = Process(target=run_with_logs, args=(args, log_file,))
-    teuthology_process.start()
-    teuthology_process.join()
-
-    logs = ""
-    with open(log_file) as f:
-        logs = f.readlines()
-    if os.path.isfile(log_file): 
-        os.remove(log_file)
-    return logs
-
-def run_with_logs(args, log_file):
-    """
-    Set a new log file to store logs 
-    and then schedule suite.
-    """
-    teuthology.setup_log_file(log_file)
-    teuthology.suite.main(args)
 
 def get_run_details(run_name):
     """
