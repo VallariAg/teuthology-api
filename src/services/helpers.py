@@ -1,6 +1,10 @@
-import uuid, os
-from multiprocessing import Process
 import teuthology
+import uuid, os, requests, logging # Note: import requests after teuthology
+from multiprocessing import Process
+from config import settings
+
+
+logger = logging.getLogger(__name__)
 
 def logs_run(func, args):
     """
@@ -29,3 +33,15 @@ def _execute_with_logs(func, args, log_file):
     """
     teuthology.setup_log_file(log_file)
     func(args)
+
+def github_user_details(access_token: str, username: str):
+    team_name = settings.admin_team
+    url = f"https://api.github.com/orgs/ceph/teams/{team_name}/memberships/{username}"
+    headers = {"Authorization": access_token}
+
+    resp = requests.get(url=url, headers=headers)
+    logger.info(resp.json())
+
+    if resp.status_code == 200:
+        return True
+    return resp.json()
