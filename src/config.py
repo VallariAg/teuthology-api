@@ -6,6 +6,9 @@ from pydantic import BaseSettings
 
 class APISettings(BaseSettings):
     PADDLES_URL: str = "http://paddles:8080"
+    # TODO: team names need to be changed below when created
+    admin_team:str = "ceph" # ceph's github team with *sudo* access to sepia
+    teuth_team: str = "teuth" # ceph's github team with access to sepia
 
     class Config:
         env_file = ".env"
