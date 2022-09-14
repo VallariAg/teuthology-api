@@ -8,7 +8,7 @@ def logs_run(func, args):
     and return logs printed during the execution of the function.
     """
     id = str(uuid.uuid4())
-    log_file = f'/archive_dir/{id}.log'
+    log_file = f'/tmp/{id}.log'
 
     teuthology_process = Process(
         target=_execute_with_logs, args=(func, args, log_file,))
