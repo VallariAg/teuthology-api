@@ -1,6 +1,8 @@
 fastapi
 uvicorn[standard]
 gunicorn
+httpx
+itsdangerous
 # Temporarily, using teuthology without monkey patching the thread
 git+https://github.com/VallariAg/teuthology@teuth-api#egg=teuthology[test]
 # Original: git+https://github.com/ceph/teuthology#egg=teuthology[test]
