@@ -1,20 +1,24 @@
-import teuthology.suite
-from services.helpers import logs_run
-import logging, requests # Note: import requests after teuthology
+from fastapi import HTTPException
+from services.helpers import logs_run, get_run_details
 from datetime import datetime
-
 from config import settings
-
-PADDLES_URL = settings.PADDLES_URL
+import teuthology.suite
+import logging
 
 log = logging.getLogger(__name__)
 
 
-def run(args, dry_run: bool, send_logs: bool):
+def run(args, dry_run: bool, send_logs: bool, access_token: str):
     """
     Schedule a suite.
     :returns: Run details (dict) and logs (list).
     """
+    if not access_token:
+        raise HTTPException(
+            status_code=401,
+            detail="You need to be logged in",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     try:
         args["--timestamp"] = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
         if dry_run:
@@ -42,18 +46,7 @@ def run(args, dry_run: bool, send_logs: bool):
         return { "run": run_details, "logs": logs }
     except Exception as exc:
         log.error("teuthology.suite.main failed with the error: " + repr(exc))
-        raise
-
-def get_run_details(run_name):
-    """
-    Queries paddles to look if run is created.
-    """
-    try:
-        url = f'{PADDLES_URL}/runs/{run_name}/'
-        run_info = requests.get(url).json()
-        return run_info
-    except:
-        raise RuntimeError(f"Unable to find run `{run_name}` in paddles database.")
+        raise HTTPException(status_code=500, detail=repr(exc))
 
 def make_run_name(run):
     """

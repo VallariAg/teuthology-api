@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from starlette.responses import RedirectResponse
 import logging
 
@@ -11,7 +11,13 @@ router = APIRouter(
 
 @router.get('/', status_code=200)
 def logout(request: Request):
-    request.session.pop('user', None)
-    return {
-        "logout": "success"
-    }
+    user = request.session.get('user')
+    if user:
+        request.session.pop('user', None)
+        return {"logout": "success"}
+    else:
+        log.warning("No session found, probably already logged out.")
+        raise HTTPException(
+            status_code=204,
+            detail="No session found, probably already logged out."
+        )

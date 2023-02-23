@@ -1,10 +1,13 @@
-import teuthology
-import uuid, os, requests, logging # Note: import requests after teuthology
 from multiprocessing import Process
 from config import settings
+from fastapi import HTTPException, Request
+import teuthology
+import uuid, os, requests, logging # Note: import requests after teuthology
+from requests.exceptions import HTTPError
 
+PADDLES_URL = settings.PADDLES_URL
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 def logs_run(func, args):
     """
@@ -34,14 +37,48 @@ def _execute_with_logs(func, args, log_file):
     teuthology.setup_log_file(log_file)
     func(args)
 
-def github_user_details(access_token: str, username: str):
-    team_name = settings.admin_team
-    url = f"https://api.github.com/orgs/ceph/teams/{team_name}/memberships/{username}"
-    headers = {"Authorization": access_token}
+def get_run_details(run_name: str):
+    """
+    Queries paddles to look if run is created.
+    """
+    url = f'{PADDLES_URL}/runs/{run_name}/'
+    try:
+        run_info = requests.get(url)
+        run_info.raise_for_status()
+        return run_info.json()
+    except HTTPError as http_err:
+        log.error(http_err)
+        raise HTTPException(
+            status_code=http_err.response.status_code,
+            detail=repr(http_err)
+        )
+    except Exception as err:
+        log.error(err)
+        raise HTTPException(
+            status_code=500,
+            detail=repr(err)
+        )
 
-    resp = requests.get(url=url, headers=headers)
-    logger.info(resp.json())
+def get_username(request: Request):
+    username = request.session.get('user', {}).get('username')
+    if username:
+        return username
+    else:
+        log.error("username empty, user probably is not logged in.")
+        raise HTTPException(
+            status_code=401,
+            detail="You need to be logged in",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-    if resp.status_code == 200:
-        return True
-    return resp.json()
+def get_token(request: Request):
+    token = request.session.get('user', {}).get('access_token')
+    if token:
+        return {"access_token": token, "token_type": "bearer"}
+    else:
+        log.error("access_token empty, user probably is not logged in.")
+        raise HTTPException(
+            status_code=401,
+            detail="You need to be logged in",
+            headers={"WWW-Authenticate": "Bearer"},
+        )

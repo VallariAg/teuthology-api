@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Request
 from services.kill import run
+from services.helpers import get_token
 from schemas.kill import KillArgs
-
 import logging
 
 log = logging.getLogger(__name__)
@@ -12,14 +12,14 @@ router = APIRouter(
 )
 
 @router.post("/", status_code=200)
-def create_run(args: KillArgs, access_token: str, logs: bool = False):
-    """
-    access_token should be of format `<token-type> <token>`
-    Example: "bearer <token>"
-    """
-    try:
-        args = args.dict(by_alias=True)
-        results = run(args, logs, access_token)
-        return results
-    except Exception as exc:
-        raise HTTPException(status_code=404, detail=repr(exc))
+def create_run(
+    request: Request,
+    args: KillArgs,
+    logs: bool = False,
+    access_token: str = Depends(get_token),
+):
+    # Note: I needed to put `request` before `args`
+    # or else it will SyntaxError: non-dafault
+    # argument follows default argument error.
+    args = args.dict(by_alias=True)
+    return run(args, logs, access_token, request)

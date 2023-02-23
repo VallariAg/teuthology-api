@@ -50,8 +50,8 @@ async def handle_callback(code: str, request: Request):
              raise HTTPException(status_code=403, detail="The application doesn't have permission to view github org")
         response_org_dic = dict(response_org.json())
         data = {
-            "id": response_org_dic.get('user').get('id'),
-            "name": response_org_dic.get('user').get('login'),
+            "id": response_org_dic.get('user', {}).get('id'),
+            "username": response_org_dic.get('user', {}).get('login'),
             "state": response_org_dic.get('state'),
             "role": response_org_dic.get('role'),
             "access_token": token,
