@@ -1,9 +1,8 @@
+from datetime import datetime
+import logging
+import teuthology.suite
 from fastapi import HTTPException
 from services.helpers import logs_run, get_run_details
-from datetime import datetime
-from config import settings
-import teuthology.suite
-import logging
 
 log = logging.getLogger(__name__)
 
@@ -45,26 +44,26 @@ def run(args, dry_run: bool, send_logs: bool, access_token: str):
         run_details = get_run_details(run_name)
         return { "run": run_details, "logs": logs }
     except Exception as exc:
-        log.error("teuthology.suite.main failed with the error: " + repr(exc))
-        raise HTTPException(status_code=500, detail=repr(exc))
+        log.error("teuthology.suite.main failed with the error: %s", repr(exc))
+        raise HTTPException(status_code=500, detail=repr(exc)) from exc
 
-def make_run_name(run):
+def make_run_name(run_dic):
     """
     Generate a run name. A run name looks like:
-        teuthology-2014-06-23_19:00:37-rados-dumpling-testing-basic-plana
+    teuthology-2014-06-23_19:00:37-rados-dumpling-testing-basic-plan
     """
-    if "," in run["machine_type"]:
+    if "," in run_dic["machine_type"]:
         worker = "multi"
     else:
-        worker = run["machine_type"]
+        worker = run_dic["machine_type"]
 
     return '-'.join(
         [
-            run["user"],
-            str(run["timestamp"]),
-            run["suite"],
-            run["ceph_branch"],
-            run["kernel_branch"] or '-',
-            run["flavor"], worker
+            run_dic["user"],
+            str(run_dic["timestamp"]),
+            run_dic["suite"],
+            run_dic["ceph_branch"],
+            run_dic["kernel_branch"] or '-',
+            run_dic["flavor"], worker
         ]
     ).replace('/', ':')

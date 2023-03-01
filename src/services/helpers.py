@@ -1,33 +1,38 @@
 from multiprocessing import Process
+import logging
+import os
+import uuid
 from config import settings
 from fastapi import HTTPException, Request
-import teuthology
-import uuid, os, requests, logging # Note: import requests after teuthology
 from requests.exceptions import HTTPError
+import teuthology
+import requests # Note: import requests after teuthology
 
 PADDLES_URL = settings.PADDLES_URL
 
 log = logging.getLogger(__name__)
+
 
 def logs_run(func, args):
     """
     Run the command function in a seperate process (to isolate logs),
     and return logs printed during the execution of the function.
     """
-    id = str(uuid.uuid4())
-    log_file = f'/tmp/{id}.log'
+    _id = str(uuid.uuid4())
+    log_file = f'/archive_dir/{_id}.log'
 
     teuthology_process = Process(
-        target=_execute_with_logs, args=(func, args, log_file,))
+        target=_execute_with_logs, args=(func, args, log_file))
     teuthology_process.start()
     teuthology_process.join()
 
     logs = ""
-    with open(log_file) as f:
-        logs = f.readlines()
-    if os.path.isfile(log_file): 
+    with open(log_file, encoding="utf-8") as file:
+        logs = file.readlines()
+    if os.path.isfile(log_file):
         os.remove(log_file)
     return logs
+
 
 def _execute_with_logs(func, args, log_file):
     """
@@ -36,6 +41,7 @@ def _execute_with_logs(func, args, log_file):
     """
     teuthology.setup_log_file(log_file)
     func(args)
+
 
 def get_run_details(run_name: str):
     """
@@ -51,34 +57,40 @@ def get_run_details(run_name: str):
         raise HTTPException(
             status_code=http_err.response.status_code,
             detail=repr(http_err)
-        )
+        ) from http_err
     except Exception as err:
         log.error(err)
         raise HTTPException(
             status_code=500,
             detail=repr(err)
-        )
+        ) from err
+
 
 def get_username(request: Request):
+    """
+    Get username from request.session
+    """
     username = request.session.get('user', {}).get('username')
     if username:
         return username
-    else:
-        log.error("username empty, user probably is not logged in.")
-        raise HTTPException(
-            status_code=401,
-            detail="You need to be logged in",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    log.error("username empty, user probably is not logged in.")
+    raise HTTPException(
+        status_code=401,
+        detail="You need to be logged in",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
 
 def get_token(request: Request):
+    """
+    Get access token from request.session
+    """
     token = request.session.get('user', {}).get('access_token')
     if token:
         return {"access_token": token, "token_type": "bearer"}
-    else:
-        log.error("access_token empty, user probably is not logged in.")
-        raise HTTPException(
+    log.error("access_token empty, user probably is not logged in.")
+    raise HTTPException(
             status_code=401,
             detail="You need to be logged in",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+    )

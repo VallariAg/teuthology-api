@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Request
 from services.helpers import logs_run, get_username, get_run_details
 import teuthology.kill
-import logging, requests # Note: import requests after teuthology
+import logging
 
 
 log = logging.getLogger(__name__)
@@ -25,18 +25,20 @@ def run(args, send_logs: bool, access_token: str, request: Request):
         run_username = run_details.get("user")
     else:
         log.error("teuthology-kill is missing --run")
-        raise HTTPException(status_code=400, detail="--run is a required argument")
-    #TODO if user has admin priviledge, then they can kill any run/job.
+        raise HTTPException(
+            status_code=400, detail="--run is a required argument")
+    # TODO if user has admin priviledge, then they can kill any run/job.
     if run_username != username:
-        log.error("%s doesn't have permission to kill a job scheduled by: %s" % (username, run_username))
-        raise HTTPException(status_code=401, detail="You don't have permission to kill this run/job")
+        log.error("%s doesn't have permission to kill a job scheduled by: %s",
+                  username, run_username)
+        raise HTTPException(
+            status_code=401, detail="You don't have permission to kill this run/job")
     try:
         if send_logs:
             logs = logs_run(teuthology.kill.main, args)
-            return { "logs": logs }
-        else:
-            teuthology.kill.main(args)
+            return {"logs": logs}
+        teuthology.kill.main(args)
         return {"kill": "success"}
     except Exception as exc:
-        log.error("teuthology.suite.main failed with the error: " + repr(exc))
-        raise HTTPException(status_code=500, detail=repr(exc))
+        log.error("teuthology.suite.main failed with the error: %s", repr(exc))
+        raise HTTPException(status_code=500, detail=repr(exc)) from exc
