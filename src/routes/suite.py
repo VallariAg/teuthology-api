@@ -12,10 +12,10 @@ router = APIRouter(
 )
 
 @router.post("/", status_code=200)
-def create_run(args: SuiteArgs):
+def create_run(args: SuiteArgs, dry_run: bool = False, logs: bool = False):
     try:
         args = args.dict(by_alias=True)
-        results = run(args)
-        return {"run": results}
+        results = run(args, dry_run, logs)
+        return results
     except Exception as exc:
         raise HTTPException(status_code=404, detail=repr(exc))

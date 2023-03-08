@@ -1,4 +1,5 @@
 import teuthology.suite
+from services.helpers import logs_run
 import logging, requests # Note: import requests after teuthology
 from datetime import datetime
 
@@ -8,10 +9,26 @@ PADDLES_URL = settings.PADDLES_URL
 
 log = logging.getLogger(__name__)
 
-def run(args):
+
+def run(args, dry_run: bool, send_logs: bool):
+    """
+    Schedule a suite.
+    :returns: Run details (dict) and logs (list).
+    """
     try:
         args["--timestamp"] = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
-        teuthology.suite.main(args)
+        if dry_run:
+            args['--dry-run'] = True
+            logs = logs_run(teuthology.suite.main, args)
+            return { "run": {}, "logs": logs }
+
+        logs = []
+        if send_logs:
+            logs = logs_run(teuthology.suite.main, args)
+        else:
+            teuthology.suite.main(args)
+
+        # get run details from paddles
         run_name = make_run_name({
             "machine_type": args["--machine-type"], 
             "user": args["--user"], 
@@ -22,7 +39,7 @@ def run(args):
             "flavor": args["--flavor"]
         })
         run_details = get_run_details(run_name)
-        return { "run": run_details }
+        return { "run": run_details, "logs": logs }
     except Exception as exc:
         log.error("teuthology.suite.main failed with the error: " + repr(exc))
         raise
