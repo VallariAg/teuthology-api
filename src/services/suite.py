@@ -1,9 +1,9 @@
 import teuthology.suite
-from services.helpers import logs_run
+from ..services.helpers import logs_run
 import logging, requests # Note: import requests after teuthology
 from datetime import datetime
 
-from config import settings
+from ..config import settings
 
 PADDLES_URL = settings.PADDLES_URL
 

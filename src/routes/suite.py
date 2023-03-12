@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from services.suite import run
-from schemas.suite import SuiteArgs
+from ..services.suite import run
+from ..schemas.suite import SuiteArgs
 import logging
 
 log = logging.getLogger(__name__)
