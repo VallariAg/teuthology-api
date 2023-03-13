@@ -40,5 +40,5 @@ def run(args, send_logs: bool, access_token: str, request: Request):
         teuthology.kill.main(args)
         return {"kill": "success"}
     except Exception as exc:
-        log.error("teuthology.suite.main failed with the error: %s", repr(exc))
+        log.error("teuthology.kill.main failed with the error: %s", repr(exc))
         raise HTTPException(status_code=500, detail=repr(exc)) from exc
