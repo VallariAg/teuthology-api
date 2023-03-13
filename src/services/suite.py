@@ -1,20 +1,23 @@
-import teuthology.suite
-from services.helpers import logs_run
-import logging, requests # Note: import requests after teuthology
 from datetime import datetime
-
-from config import settings
-
-PADDLES_URL = settings.PADDLES_URL
+import logging
+import teuthology.suite
+from fastapi import HTTPException
+from services.helpers import logs_run, get_run_details
 
 log = logging.getLogger(__name__)
 
 
-def run(args, dry_run: bool, send_logs: bool):
+def run(args, dry_run: bool, send_logs: bool, access_token: str):
     """
     Schedule a suite.
     :returns: Run details (dict) and logs (list).
     """
+    if not access_token:
+        raise HTTPException(
+            status_code=401,
+            detail="You need to be logged in",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     try:
         args["--timestamp"] = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
         if dry_run:
@@ -41,37 +44,26 @@ def run(args, dry_run: bool, send_logs: bool):
         run_details = get_run_details(run_name)
         return { "run": run_details, "logs": logs }
     except Exception as exc:
-        log.error("teuthology.suite.main failed with the error: " + repr(exc))
-        raise
+        log.error("teuthology.suite.main failed with the error: %s", repr(exc))
+        raise HTTPException(status_code=500, detail=repr(exc)) from exc
 
-def get_run_details(run_name):
-    """
-    Queries paddles to look if run is created.
-    """
-    try:
-        url = f'{PADDLES_URL}/runs/{run_name}/'
-        run_info = requests.get(url).json()
-        return run_info
-    except:
-        raise RuntimeError(f"Unable to find run `{run_name}` in paddles database.")
-
-def make_run_name(run):
+def make_run_name(run_dic):
     """
     Generate a run name. A run name looks like:
-        teuthology-2014-06-23_19:00:37-rados-dumpling-testing-basic-plana
+    teuthology-2014-06-23_19:00:37-rados-dumpling-testing-basic-plan
     """
-    if "," in run["machine_type"]:
+    if "," in run_dic["machine_type"]:
         worker = "multi"
     else:
-        worker = run["machine_type"]
+        worker = run_dic["machine_type"]
 
     return '-'.join(
         [
-            run["user"],
-            str(run["timestamp"]),
-            run["suite"],
-            run["ceph_branch"],
-            run["kernel_branch"] or '-',
-            run["flavor"], worker
+            run_dic["user"],
+            str(run_dic["timestamp"]),
+            run_dic["suite"],
+            run_dic["ceph_branch"],
+            run_dic["kernel_branch"] or '-',
+            run_dic["flavor"], worker
         ]
     ).replace('/', ':')

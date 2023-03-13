@@ -27,12 +27,14 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
 
 The documentation can be accessed at http://localhost:8082/docs after running the application.
 
+Note: To run commands, authenticate by visiting `http://localhost:8082/login` through browser and follow the github authentication steps (this stores the auth token in browser cookies). 
+
 ### Route `/`
 
 ```
 curl http://localhost:8082/
 ```
-Returns `{"root": "success"}`.
+Returns `{"root": "success", "session": { <authentication details> }}`.
 
 ### Route `/suite`
 
