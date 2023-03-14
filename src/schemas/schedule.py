@@ -1,10 +1,14 @@
-from typing import Union, Optional
+from typing import Union
 from pydantic import Field
 
 from .base import BaseArgs
 
 
 class SchedulerArgs(BaseArgs):
+    # pylint: disable=too-few-public-methods
+    """
+    Class for SchedulerArgs.
+    """
     owner: Union[str, None] = Field(default=None, alias="--owner")
     num: Union[str, None] = Field(default='1', alias="--num")
     priority: Union[str, None] = Field(default='70', alias="--priority")
