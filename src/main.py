@@ -8,29 +8,28 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DEPLOYMENT = os.getenv('DEPLOYMENT')
-SESSION_SECRET_KEY = os.getenv('SESSION_SECRET_KEY')
+DEPLOYMENT = os.getenv("DEPLOYMENT")
+SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY")
 
 log = logging.getLogger(__name__)
 app = FastAPI()
+
 
 @app.get("/")
 def read_root(request: Request):
     """
     GET route for root.
     """
-    return {
-        "root": "success",
-        "session": request.session.get('user', None)
-    }
+    return {"root": "success", "session": request.session.get("user", None)}
 
-if DEPLOYMENT == 'development':
+
+if DEPLOYMENT == "development":
     app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)

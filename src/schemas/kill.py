@@ -14,5 +14,5 @@ class KillArgs(BaseArgs):
     preserve_queue: Union[bool, None] = Field(default=None, alias="--preserve-queue")
     job: Union[list, None] = Field(default=None, alias="--job")
     jobspec: Union[str, None] = Field(default=None, alias="--jobspec")
-    machine_type: Union[str, None] = Field(default='default', alias="--machine-type")
+    machine_type: Union[str, None] = Field(default="default", alias="--machine-type")
     archive: Union[str, None] = Field(default=None, alias="--archive")
