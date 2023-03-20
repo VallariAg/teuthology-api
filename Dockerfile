@@ -19,9 +19,8 @@ RUN apt-get update && \
     apt-get clean all
 
 COPY .teuthology.yaml /root
-COPY .env* /teuthology_api/
 WORKDIR /teuthology_api
-COPY requirements.txt /teuthology_api/
+COPY requirements.txt *.env /teuthology_api/
 RUN pip3 install -r requirements.txt
 COPY . /teuthology_api/
 
