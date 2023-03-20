@@ -1,0 +1,11 @@
+name: Integration
+on: pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Start teuthology & teuthology-api
+        run: ./start.sh
+        working-directory: ./gh-actions

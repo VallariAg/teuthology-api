@@ -1,6 +1,6 @@
-name: Format code on push & pr with Black
+name: Format code with Black
 
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   lint:
