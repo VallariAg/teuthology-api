@@ -2,7 +2,7 @@ from datetime import datetime
 import logging
 import teuthology.suite
 from fastapi import HTTPException
-from services.helpers import logs_run, get_run_details
+from .helpers import logs_run, get_run_details
 
 log = logging.getLogger(__name__)
 

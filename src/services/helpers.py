@@ -2,7 +2,7 @@ from multiprocessing import Process
 import logging
 import os
 import uuid
-from config import settings
+from ..config import settings
 from fastapi import HTTPException, Request
 from requests.exceptions import HTTPError
 import teuthology
