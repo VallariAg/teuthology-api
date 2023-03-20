@@ -12,11 +12,13 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.post("/", status_code=200)
-def create_run(args: SuiteArgs,
+def create_run(
+    args: SuiteArgs,
     access_token: str = Depends(get_token),
     dry_run: bool = False,
-    logs: bool = False
+    logs: bool = False,
 ):
     args = args.dict(by_alias=True)
     return run(args, dry_run, logs, access_token)

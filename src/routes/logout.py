@@ -8,17 +8,17 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-@router.get('/', status_code=200)
+
+@router.get("/", status_code=200)
 def logout(request: Request):
     """
     GET route for logging out.
     """
-    user = request.session.get('user')
+    user = request.session.get("user")
     if user:
-        request.session.pop('user', None)
+        request.session.pop("user", None)
         return {"logout": "success"}
     log.warning("No session found, probably already logged out.")
     raise HTTPException(
-        status_code=204,
-        detail="No session found, probably already logged out."
+        status_code=204, detail="No session found, probably already logged out."
     )
