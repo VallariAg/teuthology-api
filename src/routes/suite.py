@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from services.suite import run
-from services.helpers import get_token
-from schemas.suite import SuiteArgs
+from ..services.suite import run
+from ..services.helpers import get_token
+from ..schemas.suite import SuiteArgs
 import logging
 
 log = logging.getLogger(__name__)
