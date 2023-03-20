@@ -1,6 +1,7 @@
 fastapi
 uvicorn[standard]
 gunicorn
+pytest
 httpx
 itsdangerous
 # Temporarily, using teuthology without monkey patching the thread

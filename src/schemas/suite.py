@@ -22,10 +22,8 @@ class SuiteArgs(BaseArgs):
     machine_type: Union[str, None] = Field(
         default='smithi', alias="--machine-type")
     newest: Union[str, None] = Field(default='0', alias="--newest")
-    rerun_status: Union[bool, None] = Field(
-        default=False, alias="--rerun-status.")
-    rerun_statuses: Union[str, None] = Field(
-        default='fail,dead', alias="--rerun-statuses")
+    rerun_status: Union[bool, None] = Field(default=False, alias="--rerun-status")
+    rerun_statuses: Union[str, None] = Field(default='fail,dead', alias="--rerun-statuses")
     sha1: Union[str, None] = Field(default=None, alias="--sha1")
     sleep_before_teardown: Union[str, None] = Field(
         default='0', alias="--sleep-before-teardown")
@@ -33,14 +31,10 @@ class SuiteArgs(BaseArgs):
     suite_branch: Union[str, None] = Field(
         default=None, alias="--suite-branch")
     suite_dir: Union[str, None] = Field(default=None, alias="--suite-dir")
-    suite_relpath: Union[str, None] = Field(
-        default='qa', alias="--suite-relpath")
-    suite_repo: Union[str, None] = Field(
-        default='https://github.com/ceph/ceph-ci.git', alias="--suite_repo")
-    teuthology_branch: Union[str, None] = Field(
-        default='main', alias="--teuthology-branch")
-    validate_sha1: Union[str, None] = Field(
-        default='true', alias="--validate-sha1")
+    suite_relpath: Union[str, None] = Field(default='qa', alias="--suite-relpath")
+    suite_repo: Union[str, None] = Field(default='https://github.com/ceph/ceph-ci.git', alias="--suite-repo")
+    teuthology_branch: Union[str, None] = Field(default='main', alias="--teuthology-branch")
+    validate_sha1: Union[str, None] = Field(default='true', alias="--validate-sha1")
     wait: Union[bool, None] = Field(default=False, alias="--wait")
     config_yaml: Union[list, None] = Field(default=[], alias="<config_yaml>")
     """
