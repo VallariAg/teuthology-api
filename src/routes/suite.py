@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from services.suite import run
+from services.helpers import get_token
 from schemas.suite import SuiteArgs
 import logging
 
@@ -11,11 +12,13 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 @router.post("/", status_code=200)
-def create_run(args: SuiteArgs):
-    try:
-        args = args.dict(by_alias=True)
-        results = run(args)
-        return {"run": results}
-    except Exception as exc:
-        raise HTTPException(status_code=404, detail=repr(exc))
+def create_run(
+    args: SuiteArgs,
+    access_token: str = Depends(get_token),
+    dry_run: bool = False,
+    logs: bool = False,
+):
+    args = args.dict(by_alias=True)
+    return run(args, dry_run, logs, access_token)
