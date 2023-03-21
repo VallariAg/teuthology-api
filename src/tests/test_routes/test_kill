@@ -1,0 +1,10 @@
+
+
+def test_create_kill(test_client, payload):
+    response = test_client.post(
+        "/kill",
+        headers={"Content-Type": "application/json"},
+        params={"dry_run": False, "logs":True},
+        json=payload,
+    )
+    assert response.status_code == 200
