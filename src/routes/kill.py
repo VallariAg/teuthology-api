@@ -1,8 +1,8 @@
 import logging
 from fastapi import APIRouter, Depends, Request
-from ..services.kill import run
-from ..services.helpers import get_token
-from ..schemas.kill import KillArgs
+from services.kill import run
+from services.helpers import get_token
+from schemas.kill import KillArgs
 
 log = logging.getLogger(__name__)
 
