@@ -6,6 +6,7 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
 
 #### Option 1: (teuthology docker setup)
 
+Note: For Windows users, enter the command "git config --global core.autocrlf false" in the terminal, before cloning the repositories.
 1. Clone [teuthology](https://github.com/ceph/teuthology) and [teuthology-api](https://github.com/VallariAg/teuthology-api).
 2. Add the following to [teuthology's docker-compose](https://github.com/ceph/teuthology/blob/main/docs/docker-compose/docker-compose.yml) services.
     ```
