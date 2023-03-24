@@ -11,7 +11,7 @@ client = TestClient(app)
 def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"root": "success"}
+    assert response.json() == {"root": "success", "session": None}
 
 
 def test_get_suites():
@@ -49,7 +49,6 @@ def test_delete_suite():
     assert response.status_code == 404
     if response.status_code == 204:
         assert client.get(f"/suites/{suite_name}").status_code == 404
-
 
 
 
