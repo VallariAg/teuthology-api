@@ -7,7 +7,6 @@ from fastapi import HTTPException
 from main import app
 
 client = TestClient(app)
-
 def test_create_run_with_valid_input():
     suite_args = {
         "--suite": "test-suite",
