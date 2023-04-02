@@ -1,7 +1,7 @@
 from unittest.mock import patch
 from fastapi.testclient import TestClient
 from datetime import datetime
-#import teuthology.suite
+import teuthology.suite
 from suite import run, make_run_name
 from fastapi import HTTPException
 from main import app
