@@ -83,7 +83,10 @@ async def handle_callback(code: str, request: Request):
             "access_token": token,
         }
         request.session["user"] = data
-    cookie = "; ".join([f'{str(key)}={str(value)}' for key, value in {"username": data["username"]}])
+    cookie_data = {"username": data["username"]}
+    cookie = "; ".join(
+        [f"{str(key)}={str(value)}" for key, value in cookie_data.items()]
+    )
     response = RedirectResponse(PULPITO_URL)
     response.set_cookie(key="GH_USER", value=cookie)
     return response
