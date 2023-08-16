@@ -1,7 +1,7 @@
 import logging
 import os
 from fastapi import APIRouter, HTTPException, Request
-from starlette.responses import RedirectResponse
+from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 import httpx
 
@@ -12,6 +12,7 @@ GH_CLIENT_SECRET = os.getenv("GH_CLIENT_SECRET")
 GH_AUTHORIZATION_BASE_URL = os.getenv("GH_AUTHORIZATION_BASE_URL")
 GH_TOKEN_URL = os.getenv("GH_TOKEN_URL")
 GH_FETCH_MEMBERSHIP_URL = os.getenv("GH_FETCH_MEMBERSHIP_URL")
+PULPITO_URL = os.getenv("PULPITO_URL")
 
 log = logging.getLogger(__name__)
 router = APIRouter(
@@ -82,4 +83,7 @@ async def handle_callback(code: str, request: Request):
             "access_token": token,
         }
         request.session["user"] = data
-    return RedirectResponse(url="/")
+    cookie = "; ".join([f'{str(key)}={str(value)}' for key, value in {"username": data["username"]}])
+    response = RedirectResponse(PULPITO_URL)
+    response.set_cookie(key="GH_USER", value=cookie)
+    return response
