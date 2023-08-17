@@ -83,7 +83,10 @@ async def handle_callback(code: str, request: Request):
             "access_token": token,
         }
         request.session["user"] = data
-    cookie_data = {"username": data["username"]}
+    cookie_data = {
+        "username": data["username"],
+        "avatar_url": response_org_dic.get("user", {}).get("avatar_url"),
+    }
     cookie = "; ".join(
         [f"{str(key)}={str(value)}" for key, value in cookie_data.items()]
     )

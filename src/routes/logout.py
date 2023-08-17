@@ -1,7 +1,10 @@
-import logging
+import logging, os
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import RedirectResponse
 
+PULPITO_URL = os.getenv("PULPITO_URL")
 log = logging.getLogger(__name__)
+
 router = APIRouter(
     prefix="/logout",
     tags=["logout"],
@@ -17,7 +20,7 @@ def logout(request: Request):
     user = request.session.get("user")
     if user:
         request.session.pop("user", None)
-        return {"logout": "success"}
+        return RedirectResponse(PULPITO_URL)
     log.warning("No session found, probably already logged out.")
     raise HTTPException(
         status_code=204, detail="No session found, probably already logged out."
