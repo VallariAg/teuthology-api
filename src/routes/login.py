@@ -28,6 +28,8 @@ async def github_login():
     GET route for /login, (If first time) will redirect to github login page
     where you should authorize the app to gain access.
     """
+    if not GH_AUTHORIZATION_BASE_URL or not GH_CLIENT_ID:
+        return HTTPException(status_code=500, detail="Environment secrets are missing.")
     scope = "read:org"
     return RedirectResponse(
         f"{GH_AUTHORIZATION_BASE_URL}?client_id={GH_CLIENT_ID}&scope={scope}",
