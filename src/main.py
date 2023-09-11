@@ -10,6 +10,8 @@ load_dotenv()
 
 DEPLOYMENT = os.getenv("DEPLOYMENT")
 SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY")
+PULPITO_URL = os.getenv("PULPITO_URL")
+PADDLES_URL = os.getenv("PADDLES_URL")
 
 log = logging.getLogger(__name__)
 app = FastAPI()
@@ -26,7 +28,7 @@ def read_root(request: Request):
 if DEPLOYMENT == "development":
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=[PULPITO_URL, PADDLES_URL],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

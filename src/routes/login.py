@@ -1,7 +1,7 @@
 import logging
 import os
 from fastapi import APIRouter, HTTPException, Request
-from starlette.responses import RedirectResponse
+from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 import httpx
 
@@ -12,6 +12,7 @@ GH_CLIENT_SECRET = os.getenv("GH_CLIENT_SECRET")
 GH_AUTHORIZATION_BASE_URL = os.getenv("GH_AUTHORIZATION_BASE_URL")
 GH_TOKEN_URL = os.getenv("GH_TOKEN_URL")
 GH_FETCH_MEMBERSHIP_URL = os.getenv("GH_FETCH_MEMBERSHIP_URL")
+PULPITO_URL = os.getenv("PULPITO_URL")
 
 log = logging.getLogger(__name__)
 router = APIRouter(
@@ -27,6 +28,8 @@ async def github_login():
     GET route for /login, (If first time) will redirect to github login page
     where you should authorize the app to gain access.
     """
+    if not GH_AUTHORIZATION_BASE_URL or not GH_CLIENT_ID:
+        return HTTPException(status_code=500, detail="Environment secrets are missing.")
     scope = "read:org"
     return RedirectResponse(
         f"{GH_AUTHORIZATION_BASE_URL}?client_id={GH_CLIENT_ID}&scope={scope}",
@@ -82,4 +85,13 @@ async def handle_callback(code: str, request: Request):
             "access_token": token,
         }
         request.session["user"] = data
-    return RedirectResponse(url="/")
+    cookie_data = {
+        "username": data["username"],
+        "avatar_url": response_org_dic.get("user", {}).get("avatar_url"),
+    }
+    cookie = "; ".join(
+        [f"{str(key)}={str(value)}" for key, value in cookie_data.items()]
+    )
+    response = RedirectResponse(PULPITO_URL)
+    response.set_cookie(key="GH_USER", value=cookie)
+    return response
