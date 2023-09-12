@@ -2,7 +2,9 @@ import os
 from multiprocessing import cpu_count
 
 
-bind = '0.0.0.0:8082'
+host = os.environ.get('TEUTHOLOGY_API_SERVER_HOST', '0.0.0.0')
+port = os.environ.get('TEUTHOLOGY_API_SERVER_PORT', '8080')
+bind = f'{host}:{port}'
  
 workers = cpu_count()
 worker_class = 'uvicorn.workers.UvicornWorker'

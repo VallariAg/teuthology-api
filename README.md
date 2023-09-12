@@ -22,7 +22,11 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
         build:
           context: ../../../teuthology-api
         ports:
-            - 8082:8082
+            - 8082:8080
+        environment: 
+            TEUTHOLOGY_API_SERVER_HOST: 0.0.0.0
+            TEUTHOLOGY_API_SERVER_PORT: 8080
+            PADDLES_URL: http://localhost:8080
         depends_on:
             - teuthology
             - paddles
@@ -32,7 +36,18 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
         healthcheck:
           test: [ "CMD", "curl", "-f", "http://0.0.0.0:8082" ]
     ```
-5. Follow teuthology development setup instructions from [here](https://github.com/ceph/teuthology/tree/main/docs/docker-compose).
+
+    [optional] For developement use:
+    Add following things in `teuthology_api` container:
+    ```
+    teuthology_api:
+        environment: 
+            DEPLOYMENT: development
+        volumes: 
+            - ../../../teuthology-api:/teuthology_api/:rw
+    ```
+    `DEPLOYMENT: development` would run the server in `--reload` mode (server would restart when changes are made in `/src` dir) and `volumes` would mount host directory to docker's directory (local changes would reflect in docker container). 
+3. Follow teuthology development setup instructions from [here](https://github.com/ceph/teuthology/tree/main/docs/docker-compose).
 
 ## Documentation
 
