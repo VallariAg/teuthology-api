@@ -20,5 +20,5 @@ def create_run(
     dry_run: bool = False,
     logs: bool = False,
 ):
-    args = args.dict(by_alias=True)
+    args = args.model_dump(by_alias=True)
     return run(args, dry_run, logs, access_token)
