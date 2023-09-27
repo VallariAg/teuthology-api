@@ -11,5 +11,5 @@ cd /teuthology_api/src/
 if [ "$DEPLOYMENT" = "development" ]; then
   uvicorn main:app --reload --port $PORT --host $HOST
 else
-  gunicorn -c /teuthology_api/gunicorn_config.py main:app
+  gunicorn -c /teuthology_api/gunicorn_config.py teuthology_api.main:app
 fi

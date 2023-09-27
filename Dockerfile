@@ -20,8 +20,7 @@ RUN apt-get update && \
 
 COPY .teuthology.yaml /root
 WORKDIR /teuthology_api
-COPY requirements.txt *.env start_container.sh /teuthology_api/
-RUN pip3 install -r requirements.txt
 COPY . /teuthology_api/
+RUN pip3 install -e .
 
 CMD sh /teuthology_api/start_container.sh
