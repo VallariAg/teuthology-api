@@ -1,8 +1,10 @@
 import logging
+
 from fastapi import APIRouter, Depends, Request
-from services.kill import run
-from services.helpers import get_token
-from schemas.kill import KillArgs
+
+from teuthology_api.services.kill import run
+from teuthology_api.services.helpers import get_token
+from teuthology_api.schemas.kill import KillArgs
 
 log = logging.getLogger(__name__)
 

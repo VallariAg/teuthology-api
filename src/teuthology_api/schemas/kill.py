@@ -1,7 +1,7 @@
 from typing import Union
 from pydantic import Field
 
-from .base import BaseArgs
+from teuthology_api.schemas.base import BaseArgs
 
 
 class KillArgs(BaseArgs):

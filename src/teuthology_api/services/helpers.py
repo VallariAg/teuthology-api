@@ -2,11 +2,14 @@ from multiprocessing import Process
 import logging
 import os
 import uuid
-from config import settings
+
 from fastapi import HTTPException, Request
-from requests.exceptions import HTTPError
+
+from teuthology_api.config import settings
+
 import teuthology
 import requests  # Note: import requests after teuthology
+from requests.exceptions import HTTPError
 
 PADDLES_URL = os.getenv("PADDLES_URL")
 

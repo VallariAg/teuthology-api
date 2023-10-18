@@ -3,8 +3,9 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from routes import suite, kill, login, logout
 from dotenv import load_dotenv
+
+from teuthology_api.routes import suite, kill, login, logout
 
 load_dotenv()
 
