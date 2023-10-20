@@ -24,7 +24,7 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
           context: ../../../teuthology-api
         ports:
             - 8082:8080
-        environment: 
+        environment:
             TEUTHOLOGY_API_SERVER_HOST: 0.0.0.0
             TEUTHOLOGY_API_SERVER_PORT: 8080
             PADDLES_URL: http://localhost:8080
@@ -41,14 +41,26 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
     Add following things in `teuthology_api` container:
     ```
     teuthology_api:
-        environment: 
+        environment:
             DEPLOYMENT: development
-        volumes: 
+        volumes:
             - ../../../teuthology-api:/teuthology_api/:rw
     ```
-    `DEPLOYMENT: development` would run the server in `--reload` mode (server would restart when changes are made in `/src` dir) and `volumes` would mount host directory to docker's directory (local changes would reflect in docker container). 
+    `DEPLOYMENT: development` would run the server in `--reload` mode (server would restart when changes are made in `/src` dir) and `volumes` would mount host directory to docker's directory (local changes would reflect in docker container).
 
 5. Follow teuthology development setup instructions from [here](https://github.com/ceph/teuthology/tree/main/docs/docker-compose).
+
+### Option 2: Non-containerized with venv and pip
+
+1. Clone [teuthology-api](https://github.com/VallariAg/teuthology-api) and `cd` into it.
+
+2. Create a virtualenv: `python3 -m venv venv`
+
+3. Activate the virtualenv: `source ./venv/bin/activate`
+
+4. Build the project: `pip install -e .`
+
+5. Start the server: `gunicorn -c gunicorn_config.py teuthology_api.main:app`
 
 ## Documentation
 
