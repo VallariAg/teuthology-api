@@ -6,7 +6,7 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
 
 ### Option 1: (teuthology docker setup)
 
-1. Clone [teuthology](https://github.com/ceph/teuthology) and [teuthology-api](https://github.com/VallariAg/teuthology-api).
+1. Clone [teuthology](https://github.com/ceph/teuthology) and [teuthology-api](https://github.com/ceph/teuthology-api).
 2. Rename `.env.dev` file to `.env`.
 3. Configure secrets:
 
@@ -52,7 +52,7 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
 
 ### Option 2: Non-containerized with venv and pip
 
-1. Clone [teuthology-api](https://github.com/VallariAg/teuthology-api) and `cd` into it.
+1. Clone [teuthology-api](https://github.com/ceph/teuthology-api) and `cd` into it.
 
 2. Create a virtualenv: `python3 -m venv venv`
 
