@@ -68,7 +68,7 @@ def make_run_name(run_dic):
             str(run_dic["timestamp"]),
             run_dic["suite"],
             run_dic["ceph_branch"],
-            run_dic["kernel_branch"] or "-",
+            run_dic["kernel_branch"] or "distro",
             run_dic["flavor"],
             worker,
         ]
