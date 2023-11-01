@@ -7,9 +7,8 @@ port = os.environ.get('TEUTHOLOGY_API_SERVER_PORT', '8080')
 bind = f'{host}:{port}'
  
 workers = cpu_count()
-worker_class = 'uvicorn.workers.UvicornWorker'
+worker_class = "uvicorn.workers.UvicornWorker"
 
 # loglevel = 'debug'
 accesslog = os.path.expanduser("~/teuthology-api.access.log")
-# errorlog = os.path.expanduser("~/teuthology-api.error.log") 
-
+# errorlog = os.path.expanduser("~/teuthology-api.error.log")

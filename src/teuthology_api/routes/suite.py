@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends
-from services.suite import run
-from services.helpers import get_token
-from schemas.suite import SuiteArgs
 import logging
+
+from fastapi import APIRouter, HTTPException, Depends
+
+from teuthology_api.services.suite import run
+from teuthology_api.services.helpers import get_token
+from teuthology_api.schemas.suite import SuiteArgs
 
 log = logging.getLogger(__name__)
 
