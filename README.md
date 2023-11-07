@@ -4,7 +4,7 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
 
 ## Setup
 
-### Option 1: (teuthology docker setup)
+### Option 1: Teuthology Docker Setup
 
 1. Clone [teuthology](https://github.com/ceph/teuthology) and [teuthology-api](https://github.com/ceph/teuthology-api).
 2. Rename `.env.dev` file to `.env`.
@@ -54,13 +54,17 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
 
 1. Clone [teuthology-api](https://github.com/ceph/teuthology-api) and `cd` into it.
 
-2. Create a virtualenv: `python3 -m venv venv`
+2. Rename `.env.dev` file to `.env`.
 
-3. Activate the virtualenv: `source ./venv/bin/activate`
+3. Configure secrets as described in Option 1 above.
 
-4. Build the project: `pip install -e .`
+4. Create a virtualenv: `python3 -m venv venv`
 
-5. Start the server: `gunicorn -c gunicorn_config.py teuthology_api.main:app`
+5. Activate the virtualenv: `source ./venv/bin/activate`
+
+6. Build the project: `pip install -e .`
+
+7. Start the server: `gunicorn -c gunicorn_config.py teuthology_api.main:app`
 
 ## Documentation
 
@@ -88,20 +92,19 @@ Example
     curl --location --request POST 'http://localhost:8082/suite?dry_run=false&logs=true' \
     --header 'Content-Type: application/json' \
     --data-raw '{
-        "--ceph": "wip-dis-testing-2",
+        "--ceph": "main",
         "--ceph-repo": "https://github.com/ceph/ceph-ci.git",
-        "--kernel": "distro",
-        "--limit": "2",
-        "--newest": "0",
         "--machine-type": "testnode",
         "--num": "1",
         "--priority": "70",
         "--suite": "teuthology:no-ceph",
-        "--suite-branch": "wip-dis-testing-2",
+        "--suite-branch": "main",
         "--suite-repo": "https://github.com/ceph/ceph-ci.git",
         "--teuthology-branch": "main",
         "--verbose": "1",
-        "--user": "vallariag"
+        "--user": "example"
      }'
+
+Note: "--user" in data body should be same as your github username (case sensitive). Otherwise, you wouldn't have permission to kill jobs/run.
 
 xxx
