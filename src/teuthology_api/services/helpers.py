@@ -2,6 +2,7 @@ from multiprocessing import Process
 import logging
 import os
 import uuid
+from pathlib import Path
 
 from fastapi import HTTPException, Request
 
@@ -12,6 +13,7 @@ import requests  # Note: import requests after teuthology
 from requests.exceptions import HTTPError
 
 PADDLES_URL = settings.paddles_url
+ARCHIVE_DIR = settings.archive_dir
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +24,8 @@ def logs_run(func, args):
     and return logs printed during the execution of the function.
     """
     _id = str(uuid.uuid4())
-    log_file = f"/archive_dir/{_id}.log"
+    archive = Path(ARCHIVE_DIR)
+    log_file = archive / f"{_id}.log"
 
     teuthology_process = Process(target=_execute_with_logs, args=(func, args, log_file))
     teuthology_process.start()

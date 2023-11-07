@@ -18,6 +18,7 @@ class APISettings(BaseSettings):
     gh_fetch_membership_url: str = ""
 
     session_secret_key: str = ""
+    archive_dir: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
