@@ -7,6 +7,18 @@ class APISettings(BaseSettings):
     Class for API settings.
     """
 
+    deployment: str = ""
+    pulpito_url: str = ""
+    paddles_url: str = ""
+
+    gh_client_id: str = ""
+    gh_client_secret: str = ""
+    gh_token_url: str = ""
+    gh_authorization_base_url: str = ""
+    gh_fetch_membership_url: str = ""
+
+    session_secret_key: str = ""
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )

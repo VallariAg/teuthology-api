@@ -22,6 +22,7 @@ A REST API to execute [teuthology commands](https://docs.ceph.com/projects/teuth
     teuthology_api:
         build:
           context: ../../../teuthology-api
+        env_file: ../../../teuthology-api/.env
         ports:
             - 8082:8080
         environment:

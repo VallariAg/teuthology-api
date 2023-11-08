@@ -3,16 +3,15 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from dotenv import load_dotenv
 
+from teuthology_api.config import settings
 from teuthology_api.routes import suite, kill, login, logout
 
-load_dotenv()
 
-DEPLOYMENT = os.getenv("DEPLOYMENT")
-SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY")
-PULPITO_URL = os.getenv("PULPITO_URL")
-PADDLES_URL = os.getenv("PADDLES_URL")
+DEPLOYMENT = settings.deployment
+SESSION_SECRET_KEY = settings.session_secret_key
+PULPITO_URL = settings.pulpito_url
+PADDLES_URL = settings.paddles_url
 
 log = logging.getLogger(__name__)
 app = FastAPI()

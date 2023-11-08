@@ -1,8 +1,9 @@
-import logging, os
+import logging
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import RedirectResponse
+from teuthology_api.config import settings
 
-PULPITO_URL = os.getenv("PULPITO_URL")
+PULPITO_URL = settings.pulpito_url
 log = logging.getLogger(__name__)
 
 router = APIRouter(
