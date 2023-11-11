@@ -11,7 +11,7 @@ import teuthology
 import requests  # Note: import requests after teuthology
 from requests.exceptions import HTTPError
 
-PADDLES_URL = os.getenv("PADDLES_URL")
+PADDLES_URL = settings.paddles_url
 
 log = logging.getLogger(__name__)
 
