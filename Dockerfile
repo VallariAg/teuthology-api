@@ -22,5 +22,6 @@ COPY .teuthology.yaml /root
 WORKDIR /teuthology_api
 COPY . /teuthology_api/
 RUN pip3 install -e .
+RUN mkdir /archive_dir/
 
 CMD sh /teuthology_api/start_container.sh
