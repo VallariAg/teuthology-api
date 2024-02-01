@@ -3,7 +3,7 @@ from multiprocessing import cpu_count
 
 
 host = os.environ.get('TEUTHOLOGY_API_SERVER_HOST', '0.0.0.0')
-port = os.environ.get('TEUTHOLOGY_API_SERVER_PORT', '8080')
+port = os.environ.get('TEUTHOLOGY_API_SERVER_PORT', '8082')
 bind = f'{host}:{port}'
  
 workers = cpu_count()
