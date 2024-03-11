@@ -26,16 +26,16 @@ def run(args, send_logs: bool, access_token: str, request: Request):
     run_name = args.get("--run")
     if run_name:
         run_details = get_run_details(run_name)
-        run_username = run_details.get("user")
+        run_owner = run_details.get("user")
     else:
         log.error("teuthology-kill is missing --run")
         raise HTTPException(status_code=400, detail="--run is a required argument")
     # TODO if user has admin priviledge, then they can kill any run/job.
-    if run_username != username:
+    if run_owner.lower() != username.lower():
         log.error(
             "%s doesn't have permission to kill a job scheduled by: %s",
             username,
-            run_username,
+            run_owner,
         )
         raise HTTPException(
             status_code=401, detail="You don't have permission to kill this run/job"
