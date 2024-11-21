@@ -1,5 +1,8 @@
 name: Unit Tests (with tox)
-on: pull_request
+on:
+  push:
+    branches:
+      - unit-test
 
 jobs:
   build:
@@ -12,6 +15,8 @@ jobs:
             python: "3.10"
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: teuthology_api
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -21,3 +26,4 @@ jobs:
       - name: Run tox
         # Run tox using the version of Python in `PATH`
         run: tox -e py
+        working-directory: teuthology_api
