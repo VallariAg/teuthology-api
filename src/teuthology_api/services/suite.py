@@ -37,10 +37,12 @@ def run(args, send_logs: bool, access_token: str):
                 "flavor": args["--flavor"],
             }
         )
-        run_details = get_run_details(run_name)
+        response = {}
+        if not args["--dry-run"]:
+            response["run"] = get_run_details(run_name)
         if send_logs or args["--dry-run"]:
-            return {"run": run_details, "logs": logs}
-        return {"run": run_details}
+            response["logs"] = logs
+        return response
     except Exception as exc:
         log.error("teuthology.suite.main failed with the error: %s", repr(exc))
         raise HTTPException(status_code=500, detail=str(exc)) from exc
